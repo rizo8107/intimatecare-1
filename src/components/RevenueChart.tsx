@@ -9,19 +9,31 @@ export function RevenueChart({ payments }: RevenueChartProps) {
     if (payment.status === 'SUCCESS') {
       const product = payment.product;
       if (!acc[product]) {
-        acc[product] = 0;
+        acc[product] = { revenue: 0, count: 0 };
       }
-      acc[product] += payment.amount;
+      acc[product].revenue += payment.amount;
+      acc[product].count += 1;
     }
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as Record<string, { revenue: number; count: number }>);
 
-  const totalRevenue = Object.values(revenueByProduct).reduce((sum, val) => sum + val, 0);
+  const totals = Object.values(revenueByProduct).reduce(
+    (sum, val) => {
+      sum.revenue += val.revenue;
+      sum.count += val.count;
+      return sum;
+    },
+    { revenue: 0, count: 0 }
+  );
 
-  const productData = Object.entries(revenueByProduct).map(([product, revenue]) => ({
+  const totalRevenue = totals.revenue;
+  const totalSales = totals.count;
+
+  const productData = Object.entries(revenueByProduct).map(([product, value]) => ({
     product,
-    revenue,
-    percentage: ((revenue / totalRevenue) * 100).toFixed(1),
+    revenue: value.revenue,
+    count: value.count,
+    percentage: totalRevenue > 0 ? ((value.revenue / totalRevenue) * 100).toFixed(1) : '0.0',
   }));
 
   const colors = [
@@ -35,6 +47,16 @@ export function RevenueChart({ payments }: RevenueChartProps) {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Revenue by Product</h2>
+      <p className="text-sm text-gray-500 mb-4">
+        Total revenue: <span className="font-semibold text-gray-800">₹{totalRevenue.toLocaleString('en-IN')}</span>
+        {totalSales > 0 && (
+          <>
+            {' '}
+            · Total sales:{' '}
+            <span className="font-semibold text-gray-800">{totalSales}</span>
+          </>
+        )}
+      </p>
       <div className="space-y-4">
         {productData.map((item, index) => (
           <div key={item.product} className="space-y-2">
@@ -47,7 +69,14 @@ export function RevenueChart({ payments }: RevenueChartProps) {
                 <p className="font-bold text-gray-900">
                   ₹{item.revenue.toLocaleString('en-IN')}
                 </p>
-                <p className="text-sm text-gray-500">{item.percentage}%</p>
+                <p className="text-sm text-gray-500">
+                  {item.percentage}%
+                  {item.count > 0 && (
+                    <span className="ml-1">
+                      · {item.count} sale{item.count === 1 ? '' : 's'}
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
             <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">

@@ -11,7 +11,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'telegram-subscriptions', label: 'Intimate Talks', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'customers', label: 'Customers', icon: Users },
     { id: 'reports', label: 'Reports', icon: FileText },
