@@ -1,4 +1,4 @@
-import { LayoutDashboard, CreditCard, Settings, Users, BarChart3, FileText, Menu, X } from 'lucide-react';
+import { LayoutDashboard, CreditCard, Settings, Users, BarChart3, FileText, Menu, X, Calendar } from 'lucide-react';
 import { useState } from 'react';
 
 interface SidebarProps {
@@ -12,6 +12,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'telegram-subscriptions', label: 'Intimate Talks', icon: Users },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'customers', label: 'Customers', icon: Users },
     { id: 'reports', label: 'Reports', icon: FileText },

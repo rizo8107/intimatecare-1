@@ -8,6 +8,7 @@ import { Sidebar } from './components/Sidebar';
 import { FilterPanel } from './components/FilterPanel';
 import { Pagination } from './components/Pagination';
 import TelegramSubscriptionsPage from './components/TelegramSubscriptionsPage';
+import { CalendarPage } from './components/CalendarPage';
 import { DollarSign, ShoppingBag, TrendingUp, Users } from 'lucide-react';
 import { PaymentFilters } from './types';
 
@@ -53,6 +54,8 @@ function App() {
         <div className="max-w-8xl mx-auto px-4 sm:px-2 lg:px-4 pt-16 lg:pt-8">
           {activeTab === 'telegram-subscriptions' ? (
             <TelegramSubscriptionsPage />
+          ) : activeTab === 'calendar' ? (
+            <CalendarPage />
           ) : (
             <>
               <div className="mb-6 sm:mb-8">
