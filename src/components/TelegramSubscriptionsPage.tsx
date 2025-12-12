@@ -77,8 +77,9 @@ const TelegramSubscriptionsPage: React.FC = () => {
 
         const mapped: TelegramSubscription[] = (data || []).map((item) => ({
           id: item.id,
-          customer_name: item.customer_name,
-          telegram_username: item.telegram_username,
+          // Ensure strings are never null so .toLowerCase() calls are safe
+          customer_name: item.customer_name || '',
+          telegram_username: item.telegram_username || '',
           telegram_user_id: item.telegram_user_id,
           phone_number: (item.phone_number ?? item['phone number'])
             ? String(item.phone_number ?? item['phone number'])
