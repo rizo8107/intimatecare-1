@@ -9,11 +9,13 @@ import { FilterPanel } from './components/FilterPanel';
 import { Pagination } from './components/Pagination';
 import TelegramSubscriptionsPage from './components/TelegramSubscriptionsPage';
 import { CalendarPage } from './components/CalendarPage';
-import { DollarSign, ShoppingBag, TrendingUp, Users } from 'lucide-react';
+import { DollarSign, ShoppingBag, TrendingUp, Users, Plus } from 'lucide-react';
 import { PaymentFilters } from './types';
+import { CreateOrderModal } from './components/CreateOrderModal';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isCreateOrderOpen, setIsCreateOrderOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<PaymentFilters>({
     status: 'all',
@@ -24,7 +26,7 @@ function App() {
     dateRange: 'all',
   });
 
-  const { payments: allPayments } = useAllPayments(filters);
+  const { payments: allPayments, refetch: refetchAll } = useAllPayments(filters);
   const {
     payments,
     loading,
@@ -32,6 +34,7 @@ function App() {
     totalCount,
     totalPages,
     itemsPerPage,
+    refetch: refetchPayments
   } = usePayments(filters, currentPage);
 
   const handleFiltersChange = (newFilters: PaymentFilters) => {
@@ -58,10 +61,28 @@ function App() {
             <CalendarPage />
           ) : (
             <>
-              <div className="mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
-                <p className="text-sm sm:text-base text-gray-600">Track your Intimate talks and revenue insights</p>
+              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
+                  <p className="text-sm sm:text-base text-gray-600">Track your Intimate talks and revenue insights</p>
+                </div>
+                <button
+                  onClick={() => setIsCreateOrderOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors font-medium text-sm sm:text-base"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create Order
+                </button>
               </div>
+
+              <CreateOrderModal
+                isOpen={isCreateOrderOpen}
+                onClose={() => setIsCreateOrderOpen(false)}
+                onSuccess={() => {
+                  refetchAll();
+                  refetchPayments();
+                }}
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <StatCard
